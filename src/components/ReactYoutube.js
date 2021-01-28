@@ -33,7 +33,13 @@ class ReactYoutube extends Component {
       height: '390',
       width: '640',
       playerVars: { // https://developers.google.com/youtube/player_parameters
-        autoplay: 1
+        loop: 1,
+        autoplay: 1,
+        controls: 0,
+        fs: 0,
+        playsinline: 1,
+        cc_load_policy: 3,
+        rel: 0,
       }
     }
     const {videoId} = this.props
