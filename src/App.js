@@ -4,17 +4,18 @@ import 'bootstrap/dist/css/bootstrap.min.css';
 import Navigation from './components/Navigation';
 import Main from './components/Main';
 
-function App() {
-  return(
-    <div className="App">
+class App extends React.Component {
+  render() {
+    return (
+      <div className="App">
 
-      <Navigation />
+       <Navigation />
 
-      <Main />
+       <Main />
 
-
-    </div>
-  );
+      </div>
+    );
+  }
 }
 
 export default App;
