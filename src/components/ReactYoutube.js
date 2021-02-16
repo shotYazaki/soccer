@@ -20,19 +20,17 @@ export default class ReactYoutube extends React.Component {
     this.play = this.play.bind(this);
     this.pause = this.pause.bind(this);
     this.repeat = this.repeat.bind(this);
-    this.updateProgressSkit = this.updateProgressSkit.bind(this); 
-
+    this.stop = this.stop.bind(this);
   }
 
 
   play() {
-    let video = this.setState.eventVideo?.target;
+    let video = this.state.eventVideo?.target;
 
     video?.playVideo();
 
     if(video?.getPlayerState() === 1){
       this.setState({isToogle: true});
-      this.updateProgressSkit();
     }
   };
 
@@ -45,20 +43,12 @@ export default class ReactYoutube extends React.Component {
   };
 
   repeat() {
-    this.setState({ progressBar: 0});
-    this.state.eventVideo?.target?.seekTo(this.props.skitDetail.video?.playFrom, true);
     this.play();
   };
 
-  updateProgressSkit() {
-    let self = this;
-    let timer = setInterval(() => {
-      self.updateProgressBar();
-      self.updateListLessons();
-      if(self.state.isToogle === false || self.state.progressBar === 100){
-        clearInterval(timer);
-      }
-    }, 100);
+  stop() {
+    let video = this.state.eventVideo?.target;
+    video?.stopVideo();
   }
 
   updateProgressBar(){
@@ -72,11 +62,6 @@ export default class ReactYoutube extends React.Component {
     });
   }
 
-  componentWillUnmount (event) {
-    const player = event.target
-    console.log(player.getCurrentTime())
-  }
-
   render () {
     let self = this;
 
@@ -84,7 +69,8 @@ export default class ReactYoutube extends React.Component {
       self.play();
     };
 
-    const _onReady = () => {
+    const _onReady = (event) => {
+      self.setState({ eventVideo: event });
       self.play();
     };
 
@@ -114,7 +100,9 @@ export default class ReactYoutube extends React.Component {
       <React.Fragment>
         <Col lg={{ span: 8, offset: 2 }} md={12} sm={12} xs={12} className="p-0 p-sm-1 p-md-2 p-lg-3">
           <div className={"auto-resizable-iframe"}>
-            <Button variant="primary" size ="lg" onClick={this.play}>Play</Button>
+            <Button variant="primary" size="lg" onClick={this.play}>Play</Button>
+            <Button variant="primary" size="lg" onClick={this.pause}>pause</Button>
+            <Button variant="primary" size="lg" onClick={this.stop}>stop</Button>
             <YouTube
               videoId={videoId}
               opts={opts}
