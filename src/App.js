@@ -2,7 +2,7 @@ import React from 'react';
 import './App.css';
 import 'bootstrap/dist/css/bootstrap.min.css';
 import Navigation from './components/Navigation';
-import Main from './components/Main';
+import Home from './components/Home';
 
 class App extends React.Component {
   render() {
@@ -11,7 +11,7 @@ class App extends React.Component {
 
        <Navigation />
 
-       <Main />
+       <Home />
 
       </div>
     );
