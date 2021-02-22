@@ -7,6 +7,7 @@ import Navigation from './components/Navigation';
 import Home from './components/Home';
 import About from './components/About';
 import Contents from './components/Contents'
+import './stylesheets/Header.sass'
 
 class App extends React.Component {
   render() {

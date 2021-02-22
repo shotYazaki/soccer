@@ -1,6 +1,6 @@
 import React from 'react';
 import { Navbar, Nav } from 'react-bootstrap';
-
+import '../stylesheets/Nabigation.sass'
 
 class Navigation extends React.Component {
     render() {
