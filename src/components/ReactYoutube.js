@@ -1,5 +1,5 @@
 import React from 'react';
-import { Col, Button, } from 'react-bootstrap';
+import { Col, Button,　ProgressBar } from 'react-bootstrap';
 import Proptypes from 'prop-types';
 import YouTube from 'react-youtube';
 
@@ -83,8 +83,6 @@ export default class ReactYoutube extends React.Component {
     };
 
     const opts = {
-      height: '390',
-      width: '640',
       playerVars: { // https://developers.google.com/youtube/player_parameters
         loop: 1,
         autoplay: 1,
@@ -110,9 +108,9 @@ export default class ReactYoutube extends React.Component {
               onPlay={_onPlay}
               onPause={_onPause}
               onEnd={_onEnd}
-              onStateChange={this.videoStateChange}
             />
           </div>
+          <ProgressBar className="b-progress-bar" now={this.props.progressBar} />
         </Col>
       </React.Fragment>
     );
