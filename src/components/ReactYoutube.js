@@ -1,8 +1,9 @@
 import React from 'react';
-import { Col, Button,　ProgressBar } from 'react-bootstrap';
+import { ButtonGroup, Button, Col,} from 'react-bootstrap';
+import ProgressBar from './ProgressBar';
 import Proptypes from 'prop-types';
 import YouTube from 'react-youtube';
-
+import '../stylesheets/Video.sass'
 // https://www.youtube.com/watch?v=-_pgcFQ0l64
 // https://youtu.be/-_pgcFQ0l64
 // https://www.youtube.com/watch?v=-_pgcFQ0l64&list=PLEsfXFp6DpzQbwYDx1zgcKJ4tzyWFaESK
@@ -15,14 +16,18 @@ export default class ReactYoutube extends React.Component {
       isToogle: false,
       playbackRate: 1,
       progressBar: 0,
+      playFrom: 0,
+      playUntil: 0,
+      repeatTime: 3,
     };
 
     this.play = this.play.bind(this);
     this.pause = this.pause.bind(this);
     this.repeat = this.repeat.bind(this);
     this.stop = this.stop.bind(this);
+    this.updateProgressBar = this.updateProgressBar.bind(this);
+    this.numberRepeat = 0;
   }
-
 
   play() {
     let video = this.state.eventVideo?.target;
@@ -31,11 +36,12 @@ export default class ReactYoutube extends React.Component {
 
     if(video?.getPlayerState() === 1){
       this.setState({isToogle: true});
+      this.updateProgressSkit();
     }
   };
 
   pause() {
-    let video = this.state.eventVideo?.target;
+    let video =  this.state.eventVideo?.target;
     video?.pauseVideo();
     if(video?.getPlayerState() === 2){
       this.setState({isToogle: false});
@@ -43,15 +49,32 @@ export default class ReactYoutube extends React.Component {
   };
 
   repeat() {
+    this.setState({ progressBar: 0});
+    this.state.eventVideo?.target?.seekTo(this.props.video?.playFrom, true);
     this.play();
-  };
-
-  stop() {
-    let video = this.state.eventVideo?.target;
-    video?.stopVideo();
   }
 
-  updateProgressBar(){
+  resetRepeatTime() {
+    this.numberRepeat = 0;
+    this.pause();
+  }
+
+  stop() {
+    this.state.eventVideo?.target.stopVideo();
+    this.setState({isToogle: false});
+  }
+
+  updateProgressSkit() {
+    let self = this;
+    let timer = setInterval(() => {
+      self.updateProgressBar();
+      if(self.state.isToogle === false || self.state.progressBar === 100){
+        clearInterval(timer);
+      }
+    }, 100);
+  }
+
+  updateProgressBar() {
     let timeDurration = this.props.skitDetail?.playUntil - this.props.skitDetail?.playFrom;
     let timeRunning = this.state.eventVideo?.target?.getCurrentTime() - this.props.skitDetail?.playFrom;
     let percentage = Math.floor((timeRunning / timeDurration) * 100);
@@ -96,11 +119,15 @@ export default class ReactYoutube extends React.Component {
     const {videoId} = this.props
     return (
       <React.Fragment>
+        <div className="Play-button">
+          <ButtonGroup size="mb-2">
+            <Button onClick={this.play}>play</Button>
+            <Button onClick={this.pause}>pause</Button>
+            <Button onClick={this.stop}>stop</Button>
+          </ButtonGroup>
+        </div>
         <Col lg={{ span: 8, offset: 2 }} md={12} sm={12} xs={12} className="p-0 p-sm-1 p-md-2 p-lg-3">
           <div className={"auto-resizable-iframe"}>
-            <Button variant="primary" size="lg" onClick={this.play}>Play</Button>
-            <Button variant="primary" size="lg" onClick={this.pause}>pause</Button>
-            <Button variant="primary" size="lg" onClick={this.stop}>stop</Button>
             <YouTube
               videoId={videoId}
               opts={opts}
@@ -110,7 +137,7 @@ export default class ReactYoutube extends React.Component {
               onEnd={_onEnd}
             />
           </div>
-          <ProgressBar className="b-progress-bar" now={this.props.progressBar} />
+          <ProgressBar />
         </Col>
       </React.Fragment>
     );
